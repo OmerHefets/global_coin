@@ -1,0 +1,2 @@
+class BlockException(BaseException):
+    pass

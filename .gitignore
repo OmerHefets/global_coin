@@ -128,3 +128,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# irrelevant files
+jupyter_trial.ipynb
