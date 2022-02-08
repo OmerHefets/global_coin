@@ -3,27 +3,37 @@ from typing import Dict
 from block import Block
 
 
-class NodeBlockchainInterface(abc.ABCMeta):
+class NodeBlockchainInterface(abc.ABC):
     @classmethod
     def __subclasshook__(cls, subclass):
-        return True
+        return (hasattr(subclass, 'get_block_by_hash') and
+                callable(subclass.get_block_by_hash) and
+                hasattr(subclass, 'get_block_by_height') and
+                callable(subclass.get_block_by_height) and
+                hasattr(subclass, 'add_new_block') and
+                callable(subclass.add_new_block) and
+                hasattr(subclass, 'update_block') and
+                callable(subclass.update_block) and
+                hasattr(subclass, 'delete_block') and
+                callable(subclass.delete_block) or
+                NotImplemented)
 
-    @abc.abstractmethod
-    def get_block_by_hash(hash: str) -> Dict:
+    @abc.abstractclassmethod
+    def get_block_by_hash(self, hash: str) -> Dict:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def get_block_by_height(height: int) -> Dict:
+    @abc.abstractclassmethod
+    def get_block_by_height(self, height: int) -> Dict:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def add_new_block(block: Block) -> None:
+    @abc.abstractclassmethod
+    def add_new_block(self, block: Block) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def update_block(block: Block) -> None:
+    @abc.abstractclassmethod
+    def update_block(self, block: Block) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def delete_block(block: Block) -> None:
+    @abc.abstractclassmethod
+    def delete_block(self, block: Block) -> None:
         raise NotImplementedError
