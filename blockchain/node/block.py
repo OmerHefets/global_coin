@@ -1,7 +1,8 @@
+from typing import Dict
 from datetime import datetime, timedelta
 from exceptions import BlockException
 
-HASH_LENGTH = 64  # hash is 32 bytes
+HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
 TIMESTAMP_DELTA_VALIDATION = 1  # 1 minute delay in a block processing
 
 
@@ -21,6 +22,16 @@ class Block:
         self.difficulty = difficulty
         self.nonce = nonce
         self.height = height
+
+    def __repr__(self) -> str:
+        return f"""Block(hash={self.hash},
+        prev_block_hash={self.prev_block_hash},
+        merkle_root={self.merkle_root},
+        timestamp={self.timestamp},
+        difficulty={self.difficulty},
+        nonce={self.nonce},
+        height={self.height})
+        """
 
     @property
     def hash(self) -> str:
@@ -60,7 +71,15 @@ class Block:
             raise BlockException("Invalid timestamp value")
         self._timestamp = new_timestamp
 
-    # insert difficulty
+    @property
+    def difficulty(self) -> float:
+        return self._difficulty
+
+    @difficulty.setter
+    def difficulty(self, new_difficulty) -> None:
+        if not self.difficulty_validation(new_difficulty):
+            raise BlockException("Invalid difficulty value")
+        self._difficulty = new_difficulty
 
     @property
     def nonce(self) -> int:
@@ -91,7 +110,8 @@ class Block:
 
     @staticmethod
     def timestamp_validation(timestamp) -> bool:
-        current_timestamp_with_delta = datetime.timestamp(datetime.now() + timedelta(minutes=TIMESTAMP_DELTA_VALIDATION))
+        current_timestamp_with_delta = datetime.timestamp(
+            datetime.now() + timedelta(minutes=TIMESTAMP_DELTA_VALIDATION))
         if not isinstance(timestamp, float) or timestamp > current_timestamp_with_delta:
             return False
         else:
@@ -108,3 +128,15 @@ class Block:
     @staticmethod
     def height_validation(height) -> bool:
         return False if not isinstance(height, int) else True
+
+    def convert_block_to_dict(self) -> Dict:
+        block_dict = {
+            "hash": self.hash,
+            "prev_block_hash": self.prev_block_hash,
+            "merkle_root": self.merkle_root,
+            "timestamp": self.timestamp,
+            "difficulty": self.difficulty,
+            "nonce": self.nonce,
+            "height": self.height
+        }
+        return block_dict
