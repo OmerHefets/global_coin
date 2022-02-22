@@ -1,6 +1,10 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 import abc
 from typing import Dict
-from block import Block
+from blockchain.node.bl.block import Block
 
 
 class NodeBlockchainInterface(abc.ABC):

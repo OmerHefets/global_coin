@@ -1,7 +1,13 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+
+
 import pytest
 from datetime import datetime, timedelta
-from exceptions import BlockException
-from block import Block
+from node.bl.exceptions import BlockException
+from node.bl.block import Block
 
 
 @pytest.fixture

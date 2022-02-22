@@ -1,6 +1,6 @@
 from typing import Dict
 from datetime import datetime, timedelta
-from exceptions import BlockException
+from node.bl.exceptions import BlockException
 
 HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
 TIMESTAMP_DELTA_VALIDATION = 1  # 1 minute delay in a block processing
