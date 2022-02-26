@@ -4,7 +4,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 import abc
 from typing import Dict
-from blockchain.node.bl.block import Block
+from bl.block import Block
 
 
 class NodeBlockchainInterface(abc.ABC):
@@ -16,10 +16,10 @@ class NodeBlockchainInterface(abc.ABC):
                 callable(subclass.get_block_by_height) and
                 hasattr(subclass, 'add_new_block') and
                 callable(subclass.add_new_block) and
-                hasattr(subclass, 'update_block') and
-                callable(subclass.update_block) and
-                hasattr(subclass, 'delete_block') and
-                callable(subclass.delete_block) or
+                hasattr(subclass, 'update_block_by_hash') and
+                callable(subclass.update_block_by_hash) and
+                hasattr(subclass, 'delete_block_by_hash') and
+                callable(subclass.delete_block_by_hash) or
                 NotImplemented)
 
     @abc.abstractclassmethod
@@ -35,9 +35,9 @@ class NodeBlockchainInterface(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractclassmethod
-    def update_block(self, block: Block) -> None:
+    def update_block_by_hash(self, hash: str, block: Block) -> None:
         raise NotImplementedError
 
     @abc.abstractclassmethod
-    def delete_block(self, block: Block) -> None:
+    def delete_block_by_hash(self, hash: str) -> None:
         raise NotImplementedError
