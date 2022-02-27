@@ -88,7 +88,7 @@ class Transaction:
 
     @vout_value.setter
     def vout_value(self, new_vout_value) -> None:
-        self.vout_value = new_vout_value
+        self._vout_value = new_vout_value
 
     @property
     def vout_script(self) -> str:
@@ -124,7 +124,7 @@ class Transaction:
 
     @staticmethod
     def flatten_vin_values_to_str(vin_list: List[Dict]):
-        flatten_list = [reduce(lambda x, y: str(x)+str(y), d.values()) for d in vin_list]
+        flatten_list = [(d['vin_addr'] + str(d['vin_value']) + d['vin_script']) for d in vin_list]
         vin_str = reduce(lambda x, y: x+y, flatten_list)
 
         return vin_str
