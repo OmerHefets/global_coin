@@ -7,6 +7,7 @@ from typing import List, Dict
 from functools import reduce
 
 HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
+VIN_PAD = 250 # Max single vin length is ~200 so pad with 250 characters max
 
 class Transaction:
     def __init__(self,
@@ -123,8 +124,12 @@ class Transaction:
         self._vchange_script = new_vchange_script
 
     @staticmethod
-    def flatten_vin_values_to_str(vin_list: List[Dict]):
-        flatten_list = [(d['vin_addr'] + str(d['vin_value']) + d['vin_script']) for d in vin_list]
+    def flatten_vin_dict(vin_dict: Dict) -> str:
+        return (vin_dict['vin_addr'] + str(vin_dict['vin_value']) + vin_dict['vin_script'])
+
+    @staticmethod
+    def flatten_vin_values_to_str(vin_list: List[Dict]) -> str:
+        flatten_list = [Transaction.flatten_vin_dict(d) for d in vin_list]
         vin_str = reduce(lambda x, y: x+y, flatten_list)
 
         return vin_str
@@ -138,5 +143,7 @@ class Transaction:
 
         return sha256_hash.hexdigest()
 
-
-    
+    def encode_tx_vin(self):
+        flattened_padded_vin_values = [Transaction.flatten_vin_dict(d).rjust(VIN_PAD, '0') \
+            for d in self.vin]
+        return reduce(lambda x, y: x+y, flattened_padded_vin_values)
