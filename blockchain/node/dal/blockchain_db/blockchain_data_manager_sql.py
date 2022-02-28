@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from typing import Dict
 from dal.blockchain_db.blockchain_data_manager_interface import NodeBlockchainInterface
 from bl.block import Block
-from sql_database_connection import DatabaseConnection
+from dal.sql_database_connection import DatabaseConnection
 from datetime import datetime
 
 
