@@ -1,3 +1,4 @@
+from ast import Return
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -5,9 +6,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from hashlib import sha256
 from typing import List, Dict
 from functools import reduce
+from textwrap import wrap
 
 HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
-VIN_PAD = 250 # Max single vin length is ~200 so pad with 250 characters max
+VIN_ADDR_PAD = 40
+VIN_VALUE_PAD = 30
+VIN_SCRIPT_PAD = 180
+VIN_LENGTH = 250 # total vin pad is 250 (addr + value + script)
 
 class Transaction:
     def __init__(self,
@@ -143,7 +148,27 @@ class Transaction:
 
         return sha256_hash.hexdigest()
 
-    def encode_tx_vin(self):
-        flattened_padded_vin_values = [Transaction.flatten_vin_dict(d).rjust(VIN_PAD, '0') \
-            for d in self.vin]
+    def encode_tx_vin(self) -> str:
+        flattened_padded_vin_values = [Transaction.encode_pad_vin_to_str(d) for d in self.vin]
         return reduce(lambda x, y: x+y, flattened_padded_vin_values)
+
+    @staticmethod
+    def decode_tx_vin(encoded_vin: str) -> List[Dict]:
+        return [Transaction.decode_pad_vin_to_dict(chunk) for chunk in wrap(encoded_vin, VIN_LENGTH)]
+
+    @staticmethod
+    def encode_pad_vin_to_str(vin: Dict) -> str:
+        encoded_vin = vin['vin_addr'].rjust(VIN_ADDR_PAD, '0') + str(vin['vin_value']).rjust(VIN_VALUE_PAD, '0') \
+            + vin['vin_script'].rjust(VIN_SCRIPT_PAD, '0')
+            
+        return encoded_vin
+
+    @staticmethod
+    def decode_pad_vin_to_dict(vin: str) -> Dict:
+        vin_dict = {}
+
+        vin_dict['vin_addr'] = vin[0: VIN_ADDR_PAD].lstrip('0')
+        vin_dict['vin_value'] = int(vin[VIN_ADDR_PAD: VIN_ADDR_PAD+VIN_VALUE_PAD].lstrip('0'))
+        vin_dict['vin_script'] = vin[VIN_ADDR_PAD+VIN_VALUE_PAD: VIN_ADDR_PAD+VIN_VALUE_PAD+VIN_SCRIPT_PAD].lstrip('0')
+
+        return vin_dict

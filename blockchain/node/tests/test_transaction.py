@@ -69,6 +69,7 @@ def test_vin() -> List[Dict]:
             "1aa2edbed7c1fd20ec8c57fabaaebf0312bed01"
     }]
 
+
 @pytest.fixture
 def test_advanced_vin() -> List[Dict]:
     return [{
@@ -85,6 +86,7 @@ def test_advanced_vin() -> List[Dict]:
             "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
             "1aa2edbed7c1fd20ec8c57fabaaebf03555"
     }]
+
 
 def test_flatten_vin_values_to_str_func(test_vin):
     assert Transaction.flatten_vin_values_to_str(test_vin) == \
@@ -133,10 +135,10 @@ def test_encode_tx_vin_length(test_transaction: Transaction):
 
 
 def test_encode_tx_vin_hardcoded(test_transaction: Transaction):
-    assert test_transaction.encode_tx_vin() == "0000000000000000000000000000000000000000" +\
-        "00000000000000000000001VayNert3x1KzbpzMGt2qdqrAThiRovi8627907074" + \
-            "3046022100cf19e206eb882624d9631a443eaf49258943040e9c680bf05" + \
-                "4881e548606ee77022100a1d624adf36015bfb772171046b1aa2edbed7c1fd20ec8c57fabaaebf0312bed01"
+    assert test_transaction.encode_tx_vin() == "00000001VayNert3x1KzbpzMGt2qdqrAThiRovi" + \
+    "8000000000000000000000627907074" + \
+    "00000000000000000000000000000000003046022100cf19e206eb882624d9631a443eaf49258943040e9c680bf05" + \
+    "4881e548606ee77022100a1d624adf36015bfb772171046b1aa2edbed7c1fd20ec8c57fabaaebf0312bed01"
 
 
 def test_encode_tx_vin_length_adv(test_advanced_tx: Transaction):
@@ -144,13 +146,19 @@ def test_encode_tx_vin_length_adv(test_advanced_tx: Transaction):
 
 
 def test_encode_tx_vin_hardcoded_adv(test_advanced_tx: Transaction):
-    assert test_advanced_tx.encode_tx_vin() == "0000000000000000000000000000000000000000" + \
-        "00000000000000000000001VayNert3x1KzbpzMGt2qdqrAThiRov55627907074" + \
-        "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-        "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-        "1aa2edbed7c1fd20ec8c57fabaaebf031266666" + \
-        "000000000000000000000000000000000000000000000000000000000000000000" + \
-        "1VayNert3x1KzbpzMGt2qdqrAThiRov55120000000" + \
-        "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-        "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-        "1aa2edbed7c1fd20ec8c57fabaaebf03555"
+    assert test_advanced_tx.encode_tx_vin() == "00000001VayNert3x1KzbpzMGt2qdqrAThiRov55" + \
+    "000000000000000000000627907074" + \
+    "00000000000000000000000000000000003046022100cf19e206eb882624d9631a443eaf4925894" + \
+    "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
+    "1aa2edbed7c1fd20ec8c57fabaaebf031266666" + \
+    "00000001VayNert3x1KzbpzMGt2qdqrAThiRov55" + \
+    "000000000000000000000120000000" + \
+    "000000000000000000000000000000000000003046022100cf19e206eb882624d9631a443eaf4925894" + \
+    "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
+    "1aa2edbed7c1fd20ec8c57fabaaebf03555"
+
+
+def test_decode_tx_vin_adv(test_advanced_tx: Transaction):
+    encoded_vin = test_advanced_tx.encode_tx_vin()
+    decoded_vin = test_advanced_tx.decode_tx_vin(encoded_vin=encoded_vin)
+    assert decoded_vin == test_advanced_tx.vin
