@@ -1,4 +1,3 @@
-from ast import Return
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
@@ -44,7 +43,7 @@ class Transaction:
         vout_addr={self.vout_addr},
         vout_value={self.vout_value},
         vout_script={self.vout_script},
-        vchange_addr={self.vchange_value},
+        vchange_addr={self.vchange_addr},
         vchange_value={self.vchange_value},
         vchange_script={self.vchange_script})"""
 
