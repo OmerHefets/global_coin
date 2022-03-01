@@ -1,10 +1,9 @@
-from re import sub
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 import abc
-from typing import Dict
+from typing import Dict, List
 from bl.transaction import Transaction
 
 class NodeTransactionInterface(abc.ABC):
@@ -27,7 +26,7 @@ class NodeTransactionInterface(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractclassmethod
-    def get_txs_by_block_hash(self, block_hash: str) -> Dict:
+    def get_txs_by_block_hash(self, block_hash: str) -> List[Dict]:
         raise NotImplementedError
 
     @abc.abstractclassmethod

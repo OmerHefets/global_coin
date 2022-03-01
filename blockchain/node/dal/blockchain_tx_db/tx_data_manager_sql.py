@@ -1,9 +1,6 @@
-from re import T
 import sys
 import os
 
-from numpy import block
-from pyparsing import dbl_slash_comment
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from typing import Dict, List
@@ -77,30 +74,30 @@ class TransactionDataManager(NodeTransactionInterface):
         
         self.db_connection.conn.commit()
 
-tdm = TransactionDataManager()
-tx_dict = tdm.get_tx_by_txid(txid='a1e1e9761e5fde1dfc626297ff71deea569b6a61fa7e9f9797dcfffa662c381a')
+# tdm = TransactionDataManager()
+# tx_dict = tdm.get_tx_by_txid(txid='a1e1e9761e5fde1dfc626297ff71deea569b6a61fa7e9f9797dcfffa662c381a')
 
-print(tdm.get_txs_by_block_hash(block_hash='00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249'))
+# print(tdm.get_txs_by_block_hash(block_hash='00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249'))
 
-vin = [{
-        "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRovi8",
-        "vin_value": 627907074,
-        "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf0312bed01"
-    }]
+# vin = [{
+#         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRovi8",
+#         "vin_value": 627907074,
+#         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
+#             "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
+#             "1aa2edbed7c1fd20ec8c57fabaaebf0312bed01"
+#     }]
 
-tx = Transaction(tx_block_hash="543bd63267bb4d736377e66666666666666666",
-                       tx_block_index=4,
-                       vin=vin,
-                       vout_addr="1BpqjnfKs1akUzzqxAEW6dVBU",
-                       vout_value=90000000,
-                       vout_script="76bd7e03393ceda9815b392e5bab45b330",
-                       vchange_addr="1VayNerGt2qdqrAThiRovi8",
-                       vchange_value=537907074,
-                       vchange_script="04a39b9e4fbd213ef23d04e763bdc5a071c0e827c0bd834a5")
+# tx = Transaction(tx_block_hash="543bd63267bb4d736377e66666666666666666",
+#                        tx_block_index=4,
+#                        vin=vin,
+#                        vout_addr="1BpqjnfKs1akUzzqxAEW6dVBU",
+#                        vout_value=90000000,
+#                        vout_script="76bd7e03393ceda9815b392e5bab45b330",
+#                        vchange_addr="1VayNerGt2qdqrAThiRovi8",
+#                        vchange_value=537907074,
+#                        vchange_script="04a39b9e4fbd213ef23d04e763bdc5a071c0e827c0bd834a5")
 
 
-tdm.update_tx_by_txid(txid='7c084390791c6bb1d39ebb861d072b5cdb075b3fda7344f22cf8b5b43603b40d', tx=tx)
+# tdm.update_tx_by_txid(txid='7c084390791c6bb1d39ebb861d072b5cdb075b3fda7344f22cf8b5b43603b40d', tx=tx)
 
-tdm.delete_tx_by_txid(txid='7c084390791c6bb1d39ebb861d072b5cdb075b3fda7344f22cf8b5b43603b40d')
+# tdm.delete_tx_by_txid(txid='7c084390791c6bb1d39ebb861d072b5cdb075b3fda7344f22cf8b5b43603b40d')
