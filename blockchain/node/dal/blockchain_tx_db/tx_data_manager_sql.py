@@ -7,6 +7,7 @@ from typing import Dict, List
 from dal.blockchain_tx_db.tx_data_manager_interface import NodeTransactionInterface
 from bl.transaction import Transaction
 from dal.sql_database_connection import DatabaseConnection
+from dal.utils.exceptions import TxDatabaseException
 
 class TransactionDataManager(NodeTransactionInterface):
 
@@ -16,24 +17,36 @@ class TransactionDataManager(NodeTransactionInterface):
 
     def get_tx_by_txid(self, txid: str) -> Dict:
         self.db_connection.cursor.execute(
-            """ SELECT * FROM node_transactions WHERE txid=%s""",
+            """ SELECT txid, tx_block_hash, tx_block_index, vin, 
+            vout_addr, vout_value, vout_script, vchange_addr, vchange_value, vchange_script
+            FROM node_transactions WHERE txid=%s""",
             vars=(txid,)
         )
 
-        tx = dict(self.db_connection.cursor.fetchone())
+        tx = self.db_connection.cursor.fetchone()
 
-        return tx
+        if tx != None:
+            return dict(tx)
+        else:
+            raise TxDatabaseException("Not a valid tx txid.")
+
 
     def get_txs_by_block_hash(self, block_hash: str) -> Dict:
         self.db_connection.cursor.execute(
-            """ SELECT * FROM node_transactions WHERE tx_block_hash=%s""",
+            """ SELECT txid, tx_block_hash, tx_block_index, vin, 
+            vout_addr, vout_value, vout_script, vchange_addr, vchange_value, vchange_script
+            FROM node_transactions WHERE tx_block_hash=%s""",
             vars=(block_hash,)
         )
 
-        tx_list = list(self.db_connection.cursor.fetchall())
-        tx_list_of_dicts: List[Dict] = [dict(tx) for tx in tx_list]
+        tx_list = self.db_connection.cursor.fetchall()
 
-        return tx_list_of_dicts
+        if len(tx_list) != 0:
+            tx_list_of_dicts: List[Dict] = [dict(tx) for tx in list(tx_list)]
+            return tx_list_of_dicts
+        else:
+            raise TxDatabaseException("No transactions exist for this hash.")
+
 
     def set_new_tx(self, tx: Transaction) -> None:
         self.db_connection.cursor.execute(
@@ -51,6 +64,7 @@ class TransactionDataManager(NodeTransactionInterface):
 
         self.db_connection.conn.commit()
 
+
     def update_tx_by_txid(self, txid: str, tx: Transaction) -> None:
         self.db_connection.cursor.execute(
             """ UPDATE node_transactions SET
@@ -66,6 +80,7 @@ class TransactionDataManager(NodeTransactionInterface):
 
         self.db_connection.conn.commit()
 
+
     def delete_tx_by_txid(self, txid: str) -> None:
         self.db_connection.cursor.execute(
             """ DELETE FROM node_transactions WHERE txid = %s""",
@@ -74,8 +89,10 @@ class TransactionDataManager(NodeTransactionInterface):
         
         self.db_connection.conn.commit()
 
+
 # tdm = TransactionDataManager()
 # tx_dict = tdm.get_tx_by_txid(txid='a1e1e9761e5fde1dfc626297ff71deea569b6a61fa7e9f9797dcfffa662c381a')
+# print(tx_dict)
 
 # print(tdm.get_txs_by_block_hash(block_hash='00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249'))
 

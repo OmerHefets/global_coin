@@ -6,8 +6,7 @@ from typing import Dict
 from dal.blockchain_db.blockchain_data_manager_interface import NodeBlockchainInterface
 from bl.block import Block
 from dal.sql_database_connection import DatabaseConnection
-from datetime import datetime
-
+from dal.utils.exceptions import BlockchainDatabaseException
 
 class BlockchainDataManager(NodeBlockchainInterface):
     
@@ -17,23 +16,33 @@ class BlockchainDataManager(NodeBlockchainInterface):
 
     def get_block_by_hash(self, hash: str) -> Dict:
         self.db_connection.cursor.execute(
-            """ SELECT * FROM node_blockchain WHERE hash=%s""",
+            """ SELECT hash, prev_block_hash, merkle_root, nonce, height,
+            difficulty, timestamp FROM node_blockchain WHERE hash=%s""",
             vars=(hash,)
         )
 
-        block: Dict = dict(self.db_connection.cursor.fetchone())
+        block = self.db_connection.cursor.fetchone()
 
-        return block
+        if block != None:
+            return dict(block)
+        else:
+            raise BlockchainDatabaseException("Not a valid block hash.")
+
 
     def get_block_by_height(self, height: int) -> Dict:
         self.db_connection.cursor.execute(
-            """ SELECT * FROM node_blockchain WHERE height=%s""",
+            """ SELECT hash, prev_block_hash, merkle_root, nonce, height,
+            difficulty, timestamp FROM node_blockchain WHERE height=%s""",
             vars=(str(height),)
         )
 
-        block: Dict = dict(self.db_connection.cursor.fetchone())
+        block = self.db_connection.cursor.fetchone()
 
-        return block
+        if block != None:
+            return dict(block)
+        else:
+            raise BlockchainDatabaseException("Not a valid block height.")
+
 
     def add_new_block(self, block: Block) -> None:
         self.db_connection.cursor.execute(
@@ -46,6 +55,7 @@ class BlockchainDataManager(NodeBlockchainInterface):
 
         self.db_connection.conn.commit()
 
+
     def update_block_by_hash(self, hash: str, block: Block) -> None:
         self.db_connection.cursor.execute(
             """ UPDATE node_blockchain SET
@@ -56,6 +66,7 @@ class BlockchainDataManager(NodeBlockchainInterface):
         )
 
         self.db_connection.conn.commit()
+
 
     def delete_block_by_hash(self, hash: str) -> None:
         self.db_connection.cursor.execute(
