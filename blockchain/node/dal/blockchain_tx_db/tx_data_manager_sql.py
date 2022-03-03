@@ -6,13 +6,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from typing import Dict, List
 from dal.blockchain_tx_db.tx_data_manager_interface import NodeTransactionInterface
 from bl.transaction import Transaction
-from dal.sql_database_connection import DatabaseConnection
+from dal.sql_database_connection import database_connection
 from dal.utils.exceptions import TxDatabaseException
 
 class TransactionDataManager(NodeTransactionInterface):
 
     def __init__(self) -> None:
-        self.db_connection = DatabaseConnection()
+        self.db_connection = database_connection
 
 
     def get_tx_by_txid(self, txid: str) -> Dict:
@@ -28,7 +28,7 @@ class TransactionDataManager(NodeTransactionInterface):
         if tx != None:
             return dict(tx)
         else:
-            raise TxDatabaseException("Not a valid tx txid.")
+            raise TxDatabaseException(f"Not a valid tx txid {txid}")
 
 
     def get_txs_by_block_hash(self, block_hash: str) -> Dict:
@@ -45,7 +45,7 @@ class TransactionDataManager(NodeTransactionInterface):
             tx_list_of_dicts: List[Dict] = [dict(tx) for tx in list(tx_list)]
             return tx_list_of_dicts
         else:
-            raise TxDatabaseException("No transactions exist for this hash.")
+            raise TxDatabaseException(f"No transactions exist for this hash {block_hash}")
 
 
     def set_new_tx(self, tx: Transaction) -> None:

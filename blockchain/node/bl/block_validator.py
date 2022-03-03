@@ -14,9 +14,12 @@ class BlockValidator:
         self._unified_block = new_unified_block
 
     def validate_block():
-        # validate hash
+        # validate hash (smaller than difficulty defined by the node, contain all items)
         # validate first tx (coinbase)
         # validate all txs are UTXO
         # validate all txs relate to this block
+        # validate height + prev_block_hash
+        # validate merkle root (simple hash of all tx's, no tree)
+        # timestamp: 30 min advance / lag
         pass
 

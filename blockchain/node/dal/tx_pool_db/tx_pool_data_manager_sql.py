@@ -6,13 +6,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from typing import Dict, List
 from dal.tx_pool_db.tx_pool_data_manager_interface import NodeTxPoolInterface
 from bl.transaction import Transaction
-from dal.sql_database_connection import DatabaseConnection
+from dal.sql_database_connection import database_connection
 from node.dal.utils.exceptions import TxPoolDatabaseException
 
 class TxPoolDataManager(NodeTxPoolInterface):
 
     def __init__(self) -> None:
-        self.db_connection = DatabaseConnection()
+        self.db_connection = database_connection
 
 
     def get_tx_by_txid(self, txid: str) -> Dict:
@@ -27,7 +27,7 @@ class TxPoolDataManager(NodeTxPoolInterface):
         if tx != None:
             return dict(tx)
         else:
-            raise TxPoolDatabaseException("No such txid exists.")
+            raise TxPoolDatabaseException(f"No such txid {txid} exists.")
 
 
     def get_top_100_txs(self) -> List[Dict]:
@@ -88,5 +88,5 @@ class TxPoolDataManager(NodeTxPoolInterface):
 
 # dbm = TxPoolDataManager()
 
-# # print(dbm.get_tx_by_txid(txid='12436344'))
+# print(dbm.get_tx_by_txid(txid='12436344'))
 # print(dbm.get_top_100_txs())

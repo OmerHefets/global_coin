@@ -5,13 +5,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from typing import Dict
 from dal.blockchain_db.blockchain_data_manager_interface import NodeBlockchainInterface
 from bl.block import Block
-from dal.sql_database_connection import DatabaseConnection
+from dal.sql_database_connection import database_connection
 from dal.utils.exceptions import BlockchainDatabaseException
 
 class BlockchainDataManager(NodeBlockchainInterface):
     
     def __init__(self) -> None:
-        self.db_connection = DatabaseConnection()
+        self.db_connection = database_connection
 
 
     def get_block_by_hash(self, hash: str) -> Dict:
@@ -26,7 +26,7 @@ class BlockchainDataManager(NodeBlockchainInterface):
         if block != None:
             return dict(block)
         else:
-            raise BlockchainDatabaseException("Not a valid block hash.")
+            raise BlockchainDatabaseException(f"Not a valid block hash {hash}")
 
 
     def get_block_by_height(self, height: int) -> Dict:
@@ -41,7 +41,7 @@ class BlockchainDataManager(NodeBlockchainInterface):
         if block != None:
             return dict(block)
         else:
-            raise BlockchainDatabaseException("Not a valid block height.")
+            raise BlockchainDatabaseException(f"Not a valid block height {str(height)}")
 
 
     def add_new_block(self, block: Block) -> None:
@@ -75,3 +75,7 @@ class BlockchainDataManager(NodeBlockchainInterface):
         )
 
         self.db_connection.conn.commit()
+
+
+# dbm = BlockchainDataManager()
+# dbm.get_block_by_height(24235)

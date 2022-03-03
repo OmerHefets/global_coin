@@ -1,3 +1,4 @@
+from h11 import Data
 from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 
@@ -17,3 +18,5 @@ class DatabaseConnection:
 
         except Exception as error:
             print(f"Connection Failed. The error is: {error}")
+
+database_connection = DatabaseConnection()
