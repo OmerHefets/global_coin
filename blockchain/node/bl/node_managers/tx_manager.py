@@ -8,7 +8,7 @@ from dal.blockchain_tx_db.tx_data_manager_sql import TransactionDataManager
 from dal.utils.exceptions import TxDatabaseException
 from fastapi import status
 
-class TxGetter():
+class TxManager:
     def __init__(self) -> None:
         self.tx_db = TransactionDataManager()
 

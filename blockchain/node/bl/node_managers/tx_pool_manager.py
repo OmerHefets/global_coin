@@ -8,7 +8,7 @@ from dal.tx_pool_db.tx_pool_data_manager_sql import TxPoolDataManager
 from dal.utils.exceptions import TxPoolDatabaseException
 from fastapi import status
 
-class TxPoolGetter():
+class TxPoolManager:
     def __init__(self) -> None:
         self.tx_pool_db = TxPoolDataManager()
 
@@ -26,4 +26,4 @@ class TxPoolGetter():
             tx_list_of_dicts = self.tx_pool_db.get_top_100_txs()
             return (status.HTTP_200_OK, tx_list_of_dicts)
         except TxPoolDatabaseException:
-            return (status.HTTP_200_OK, None)
+            return (status.HTTP_200_OK, None) # An empty list is fine, no 404 is required

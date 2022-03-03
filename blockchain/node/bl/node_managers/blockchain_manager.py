@@ -8,7 +8,7 @@ from dal.blockchain_db.blockchain_data_manager_sql import BlockchainDataManager
 from dal.utils.exceptions import BlockchainDatabaseException
 from fastapi import status
 
-class BlockGetter:
+class BlockchainManager:
     def __init__(self) -> None:
         self.blockchain_db = BlockchainDataManager()
 
