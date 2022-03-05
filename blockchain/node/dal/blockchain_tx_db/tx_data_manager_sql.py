@@ -31,7 +31,7 @@ class TransactionDataManager(NodeTransactionInterface):
             raise TxDatabaseException(f"Not a valid tx txid {txid}")
 
 
-    def get_txs_by_block_hash(self, block_hash: str) -> Dict:
+    def get_txs_by_block_hash(self, block_hash: str) -> List[Dict]:
         self.db_connection.cursor.execute(
             """ SELECT txid, tx_block_hash, tx_block_index, vin, 
             vout_addr, vout_value, vout_script, vchange_addr, vchange_value, vchange_script

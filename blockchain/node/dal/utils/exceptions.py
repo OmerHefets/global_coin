@@ -1,6 +1,3 @@
-from ast import Pass
-
-
 class BlockchainDatabaseException(BaseException):
     pass
 
