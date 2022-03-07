@@ -7,7 +7,6 @@ from hashlib import sha256
 from typing import Dict, List
 import pytest
 from node.bl.transaction import Transaction
-from node.bl.block import Block
 from node.bl.unified_block import UnifiedBlock
 
 @pytest.fixture
