@@ -13,6 +13,14 @@ class BlockchainManager:
         self.blockchain_db = BlockchainDataManager()
 
 
+    def get_latest_block(self) -> Tuple:
+        try:
+            block = self.blockchain_db.get_latest_block()
+            return (status.HTTP_200_OK, block)
+        except BlockchainDatabaseException:
+            return (status.HTTP_404_NOT_FOUND, None)
+
+
     def get_block_by_hash(self, hash: str) -> Tuple:
         try:
             block = self.blockchain_db.get_block_by_hash(hash=hash)

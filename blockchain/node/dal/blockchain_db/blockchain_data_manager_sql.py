@@ -14,6 +14,20 @@ class BlockchainDataManager(NodeBlockchainInterface):
         self.db_connection = database_connection
 
 
+    def get_latest_block(self) -> Dict:
+        self.db_connection.cursor.execute(
+            """ SELECT hash, prev_block_hash, merkle_root, nonce, height, difficulty, timestamp FROM node_blockchain
+                WHERE height = (SELECT MAX(height) FROM node_blockchain)"""
+        )
+
+        block = self.db_connection.cursor.fetchone()
+
+        if block != None:
+            return dict(block)
+        else:
+            raise BlockchainDatabaseException(f"Not a single block exists in the blockchain.")
+
+
     def get_block_by_hash(self, hash: str) -> Dict:
         self.db_connection.cursor.execute(
             """ SELECT hash, prev_block_hash, merkle_root, nonce, height,
