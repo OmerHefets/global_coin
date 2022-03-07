@@ -3,3 +3,6 @@ class BlockException(BaseException):
 
 class TransactionException(BaseException):
     pass
+
+class BlockValidationException(BaseException):
+    pass
