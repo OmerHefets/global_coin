@@ -48,3 +48,13 @@ class UnifiedBlock(Block):
 
         return sha256_hash.hexdigest()
 
+    def calc_block_hash(self):
+        # in this implementation, block hash is calculated based on:
+        # timestamp + prev_block_hash + merkle_root + nonce
+        block_string = (str(self.timestamp) + self.prev_block_hash + self.merkle_root \
+            + str(self.nonce)).encode()
+
+        sha256_hash = sha256()
+        sha256_hash.update(block_string)
+
+        return sha256_hash.hexdigest()

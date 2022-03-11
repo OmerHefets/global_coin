@@ -12,6 +12,7 @@ from node.dal.utils.exceptions import BlockchainDatabaseException, UtxoDatabaseE
 from datetime import datetime, timedelta
 
 TIMESTAMP_DELTA_VALIDATION = 30  # 30 Minutes possible offset to the future
+COINBASE_ADDR = "coinbase"
 
 class BlockValidator:
 
@@ -29,7 +30,7 @@ class BlockValidator:
     def validate_block():
         # validate hash (smaller than difficulty defined by the node, contain all items)
         # validate first tx (coinbase) --DONE--
-        # validate all txs are UTXO
+        # validate all txs are UTXO --DONE--
         # validate all txs relate to this block --DONE--
         # validate height + prev_block_hash --DONE--
         # validate merkle root (simple hash of all tx's, no tree) --DONE--
@@ -46,7 +47,7 @@ class BlockValidator:
         if len(first_tx.vin) != 1:
             raise BlockValidationException("First tx doesn't have specifically 1 vin")
 
-        if first_tx.vin[0]['vin_addr'] != "coinbase":
+        if first_tx.vin[0]['vin_addr'] != COINBASE_ADDR:
             raise BlockValidationException("First tx must be a coinbase tx")
 
         return True
@@ -113,14 +114,39 @@ class BlockValidator:
     @staticmethod
     def validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
         utxo_data_manager = UtxoDataManager()
+
         for tx in unified_b.tx_list:
             try:
                 utxo_data_manager.get_utxo_by_txid(tx.txid)
-            # Needed a hotfix here. BlockException is not raising
-            except UtxoDatabaseException:
+            except Exception:
                 raise BlockValidationException("Some txs in the block are not UTXO's.")
 
         return True
+
+    @staticmethod
+    def validate_block_difficulty(unified_b: UnifiedBlock, req_difficulty) -> bool:
+        if unified_b.difficulty < req_difficulty:
+            raise BlockValidationException("Block's difficulty isn't enough")
+
+        return True
+
+
+    @staticmethod 
+    def validate_block_hash(unified_b: UnifiedBlock) -> bool:
+        """ Node validates 2 things:
+        1. Block hash is in the correct format
+        2. Block hash is smaller than the required difficulty
+        """
+        
+        excpected_hash = unified_b.calc_block_hash()
+
+        if unified_b.hash != excpected_hash:
+            raise BlockValidationException("Block hash does not meet the standard")
+
+        #TODO: Add target hash verification
+
+        return True
+
 
 
 
@@ -179,5 +205,7 @@ unified_b = UnifiedBlock(hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05
                     height=124193,
                     tx_list=[tx_1, tx_2])
 
+print(unified_b.merkle_root)
+print(unified_b.calc_block_hash())
+
 bv = BlockValidator()
-bv.validate_all_txs_are_utxo(unified_b=unified_b)
