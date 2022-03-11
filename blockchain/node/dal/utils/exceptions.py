@@ -1,11 +1,15 @@
-class BlockchainDatabaseException(BaseException):
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+class BlockchainDatabaseException(Exception):
     pass
 
-class TxDatabaseException(BaseException):
+class TxDatabaseException(Exception):
     pass
 
-class TxPoolDatabaseException(BaseException):
+class TxPoolDatabaseException(Exception):
     pass
 
-class UtxoDatabaseException(BaseException):
+class UtxoDatabaseException(Exception):
     pass

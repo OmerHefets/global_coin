@@ -1,8 +1,8 @@
-class BlockException(BaseException):
+class BlockException(Exception):
     pass
 
-class TransactionException(BaseException):
+class TransactionException(Exception):
     pass
 
-class BlockValidationException(BaseException):
+class BlockValidationException(Exception):
     pass
