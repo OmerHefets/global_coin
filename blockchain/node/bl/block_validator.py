@@ -1,6 +1,5 @@
 import sys
 import os
-
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from typing import Dict, List
@@ -9,7 +8,7 @@ from node.bl.unified_block import UnifiedBlock
 from node.bl.exceptions import BlockValidationException
 from node.dal.blockchain_db.blockchain_data_manager_sql import BlockchainDataManager
 from node.dal.utxo_db.utxo_data_manager_sql import UtxoDataManager
-from node.dal.utils.exceptions import BlockchainDatabaseException, UtxoDatabaseException
+from node.dal.utils.exceptions import BlockchainDatabaseException
 from datetime import datetime, timedelta
 
 TIMESTAMP_DELTA_VALIDATION = 30  # 30 Minutes possible offset to the future
