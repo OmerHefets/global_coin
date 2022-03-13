@@ -154,3 +154,15 @@ def test_validate_merkle_root_wrong(unified_block, bv):
     unified_block.merkle_root = "wrong_merkle_root"
     with pytest.raises(BlockValidationException):
         bv._BlockValidator__validate_merkle_root(unified_block)
+
+
+@pytest.mark.parametrize(argnames="req_difficulty",
+                         argvalues=[0, 1.3, 10, -2])
+def test_validate_block_hash_val_by_difficulty(unified_block, bv, req_difficulty):
+    assert bv._BlockValidator__validate_block_hash_val_by_difficulty(unified_block, req_difficulty) == True
+
+
+@pytest.mark.parametrize(argnames="req_difficulty",
+                         argvalues=[75, 100, 256, 400, 1000])
+def test_validate_block_hash_val_by_difficulty_invalid_diff(unified_block, bv, req_difficulty):
+    assert bv._BlockValidator__validate_block_hash_val_by_difficulty(unified_block, req_difficulty) == False

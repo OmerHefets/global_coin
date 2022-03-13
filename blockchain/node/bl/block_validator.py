@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from typing import Dict, List
@@ -13,29 +14,25 @@ from datetime import datetime, timedelta
 
 TIMESTAMP_DELTA_VALIDATION = 30  # 30 Minutes possible offset to the future
 COINBASE_ADDR = "coinbase"
+DIFFICULTY_BITS = 256 # as of the hash size (sha-256)
 
 class BlockValidator:
 
-    # def __init__(self, unified_block: UnifiedBlock):
-    #     self.unified_block = unified_block
-
-    # @property
-    # def unified_block(self) -> UnifiedBlock:
-    #     return self._unified_block
-
-    # @unified_block.setter
-    # def unified_block(self, new_unified_block: UnifiedBlock) -> None:
-    #     self._unified_block = new_unified_block
-
-    def validate_block():
-        # validate hash (smaller than difficulty defined by the node, contain all items)
-        # validate first tx (coinbase) --DONE--
-        # validate all txs are UTXO --DONE--
-        # validate all txs relate to this block --DONE--
-        # validate height + prev_block_hash --DONE--
-        # validate merkle root (simple hash of all tx's, no tree) --DONE--
-        # timestamp: 30 min advance --DONE--
-        pass
+    def validate_block(unified_block: UnifiedBlock, req_difficulty: float) -> bool:
+        """
+        validate hash (smaller than difficulty defined by the node, contain all items)
+        validate first tx (coinbase)
+        validate all txs are UTXO
+        validate all txs relate to this block
+        validate height + prev_block_hash
+        validate merkle root (simple hash of all tx's, no tree)
+        timestamp: 30 min advance
+        """
+        return BlockValidator.__validate_first_tx(tx_list=unified_b.tx_list) and BlockValidator.__validate_txs_related_to_block(unified_b=unified_block) \
+            and BlockValidator.__validate_merkle_root(unified_b=unified_block) and BlockValidator.__validate_block_timestamp(unified_b=unified_block) \
+            and BlockValidator.__validate_prev_block_hash(unified_b=unified_block) and BlockValidator.__validate_block_height(unified_b=unified_block) \
+            and BlockValidator.__validate_all_txs_are_utxo(unified_b=unified_block) and BlockValidator.__validate_block_difficulty(unified_block, req_difficulty) \
+            and BlockValidator.__validate_block_hash(unified_b=unified_block, req_difficulty=req_difficulty)
 
 
     @staticmethod
@@ -112,7 +109,7 @@ class BlockValidator:
 
 
     @staticmethod
-    def validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
+    def __validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
         utxo_data_manager = UtxoDataManager()
 
         for tx in unified_b.tx_list:
@@ -124,7 +121,7 @@ class BlockValidator:
         return True
 
     @staticmethod
-    def validate_block_difficulty(unified_b: UnifiedBlock, req_difficulty) -> bool:
+    def __validate_block_difficulty(unified_b: UnifiedBlock, req_difficulty: float) -> bool:
         if unified_b.difficulty < req_difficulty:
             raise BlockValidationException("Block's difficulty isn't enough")
 
@@ -132,7 +129,7 @@ class BlockValidator:
 
 
     @staticmethod 
-    def validate_block_hash(unified_b: UnifiedBlock) -> bool:
+    def __validate_block_hash(unified_b: UnifiedBlock, req_difficulty: float) -> bool:
         """ Node validates 2 things:
         1. Block hash is in the correct format
         2. Block hash is smaller than the required difficulty
@@ -141,11 +138,17 @@ class BlockValidator:
         excpected_hash = unified_b.calc_block_hash()
 
         if unified_b.hash != excpected_hash:
-            raise BlockValidationException("Block hash does not meet the standard")
+            raise BlockValidationException("Block hash does not meet the hashing standard")
 
-        #TODO: Add target hash verification
+        if not BlockValidator.__validate_block_hash_val_by_difficulty(unified_b=unified_b, 
+                                                                      req_difficulty=req_difficulty):
+            raise BlockValidationException("Block does not stand the required difficulty")
 
         return True
+
+    @staticmethod
+    def __validate_block_hash_val_by_difficulty(unified_b: UnifiedBlock, req_difficulty: float) -> bool:
+        return False if int(unified_b.hash, 16) > 2 ** (DIFFICULTY_BITS - req_difficulty) else True
 
 
 
@@ -205,7 +208,5 @@ unified_b = UnifiedBlock(hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05
                     height=124193,
                     tx_list=[tx_1, tx_2])
 
-print(unified_b.merkle_root)
-print(unified_b.calc_block_hash())
-
 bv = BlockValidator()
+# BlockValidator.validate_block(unified_block=unified_b, req_difficulty=5)
