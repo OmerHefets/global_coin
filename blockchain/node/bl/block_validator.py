@@ -111,7 +111,9 @@ class BlockValidator:
     def __validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
         utxo_data_manager = UtxoDataManager()
 
-        for tx in unified_b.tx_list:
+        tx_list_without_coinbase_tx = list(filter(lambda tx: tx.tx_block_index != 1, unified_b.tx_list))
+
+        for tx in tx_list_without_coinbase_tx: # Check all tx's but coinbase
             try:
                 utxo_data_manager.get_utxo_by_txid(tx.txid)
             except Exception:
@@ -144,6 +146,7 @@ class BlockValidator:
             raise BlockValidationException("Block does not stand the required difficulty")
 
         return True
+
 
     @staticmethod
     def __validate_block_hash_val_by_difficulty(unified_b: UnifiedBlock, req_difficulty: float) -> bool:
