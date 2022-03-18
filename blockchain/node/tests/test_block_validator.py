@@ -26,11 +26,8 @@ def unified_block() -> UnifiedBlock:
                         vin=vin_tx1,
                         vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
                         vout_value=6000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
                         vchange_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
-                        vchange_value=0,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
+                        vchange_value=0)
     
     vin_tx2 = [{
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
@@ -52,11 +49,8 @@ def unified_block() -> UnifiedBlock:
                         vin=vin_tx2,
                         vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
                         vout_value=90000000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
                         vchange_addr="1VayNert3x1KzbpzMGt2qdqrAThiRovi8",
-                        vchange_value=537907074,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
+                        vchange_value=537907074)
 
     unified_b = UnifiedBlock(hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
                     prev_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d173951632249",
@@ -83,11 +77,8 @@ def wrong_unified_block() -> UnifiedBlock:
                         vin=vin_tx1,
                         vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
                         vout_value=6000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
                         vchange_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
-                        vchange_value=0,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
+                        vchange_value=0)
     
     vin_tx2 = [{
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
@@ -109,11 +100,8 @@ def wrong_unified_block() -> UnifiedBlock:
                         vin=vin_tx2,
                         vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
                         vout_value=90000000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
                         vchange_addr="1VayNert3x1KzbpzMGt2qdqrAThiRovi8",
-                        vchange_value=537907074,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
+                        vchange_value=537907074)
 
     unified_b = UnifiedBlock(hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
                     prev_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d173951632249",

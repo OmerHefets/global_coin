@@ -27,7 +27,7 @@ class BlockValidator:
         validate merkle root (simple hash of all tx's, no tree)
         timestamp: 30 min advance
         """
-        return BlockValidator.__validate_first_tx(tx_list=unified_b.tx_list) and BlockValidator.__validate_txs_related_to_block(unified_b=unified_block) \
+        return BlockValidator.__validate_first_tx(tx_list=unified_block.tx_list) and BlockValidator.__validate_txs_related_to_block(unified_b=unified_block) \
             and BlockValidator.__validate_merkle_root(unified_b=unified_block) and BlockValidator.__validate_block_timestamp(unified_b=unified_block) \
             and BlockValidator.__validate_prev_block_hash(unified_b=unified_block) and BlockValidator.__validate_block_height(unified_b=unified_block) \
             and BlockValidator.__validate_all_txs_are_utxo(unified_b=unified_block) and BlockValidator.__validate_block_difficulty(unified_block, req_difficulty) \
@@ -115,7 +115,7 @@ class BlockValidator:
 
         for tx in tx_list_without_coinbase_tx: # Check all tx's but coinbase
             try:
-                utxo_data_manager.get_utxo_by_txid(tx.txid)
+                utxo_data_manager.get_utxo_by_txid(tx.txid) # TODO: Not goot enought. Might be exploited.
             except Exception:
                 raise BlockValidationException("Some txs in the block are not UTXO's.")
 
@@ -152,63 +152,3 @@ class BlockValidator:
     def __validate_block_hash_val_by_difficulty(unified_b: UnifiedBlock, req_difficulty: float) -> bool:
         return False if int(unified_b.hash, 16) > 2 ** (DIFFICULTY_BITS - req_difficulty) else True
 
-
-
-
-vin_tx1 = [{
-        "vin_addr": "coinbase",
-        "vin_value": 6000,
-        "vin_script": "a0a0a0a0a0a0a0a0a0"
-    }]
-
-tx_1 = Transaction(tx_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
-                        tx_block_index=1,
-                        vin=vin_tx1,
-                        vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
-                        vout_value=6000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
-                        vchange_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
-                        vchange_value=0,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
-tx_1.txid = '12423'
-
-vin_tx2 = [{
-        "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
-        "vin_value": 627907074,
-        "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf031266666"
-    },
-    {
-        "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
-        "vin_value": 120000000,
-        "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf03555"
-    }]
-
-tx_2 = Transaction(tx_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
-                        tx_block_index=2,
-                        vin=vin_tx2,
-                        vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
-                        vout_value=90000000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
-                        vchange_addr="1VayNert3x1KzbpzMGt2qdqrAThiRovi8",
-                        vchange_value=537907074,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
-tx_2.txid = '98798789'
-
-unified_b = UnifiedBlock(hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
-                    prev_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d173951632249",
-                    merkle_root="5e049f4030e0ab2debb92378f53c0a6e09548aea083f3ab25e1d94ea1155e29d",
-                    timestamp=datetime.timestamp(
-                        datetime.now()),
-                    difficulty=180923195.25802612,
-                    nonce=4215469401,
-                    height=124193,
-                    tx_list=[tx_1, tx_2])
-
-bv = BlockValidator()
-# BlockValidator.validate_block(unified_block=unified_b, req_difficulty=5)

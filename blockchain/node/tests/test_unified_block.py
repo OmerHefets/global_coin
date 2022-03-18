@@ -22,11 +22,8 @@ def unified_block() -> UnifiedBlock:
                         vin=vin_tx1,
                         vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
                         vout_value=6000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
                         vchange_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
-                        vchange_value=0,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
+                        vchange_value=0)
     
     vin_tx2 = [{
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
@@ -48,11 +45,8 @@ def unified_block() -> UnifiedBlock:
                         vin=vin_tx2,
                         vout_addr="1Bpqjnfrp4BKxdGFKs1akUzzqxAEW6dVBU",
                         vout_value=90000000,
-                        vout_script="76bd7e03396843873ceda9815b392e5bab45b330",
                         vchange_addr="1VayNert3x1KzbpzMGt2qdqrAThiRovi8",
-                        vchange_value=537907074,
-                        vchange_script="04a39b9e4fbd213ef24bb9be69de4a118dd0644082e47c01fd9159d38637b83f" + \
-                        "bcdc115a5d6e970586a012d1cfe3e3a8b1a3d04e763bdc5a071c0e827c0bd834a5")
+                        vchange_value=537907074)
 
     unified_b = UnifiedBlock(hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
                     prev_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d173951632249",
@@ -67,8 +61,8 @@ def unified_block() -> UnifiedBlock:
     return unified_b
 
 def test_calc_block_merkle_root(unified_block):
-    txids_concat = "6ae83bc01c971665a1d2b6460614bcdf75dbe9e1c4c65acf4c7d99be2b733a149d" +  \
-        "93a8fe2a0ca022dde733f7e1ba3d66b6cbee8f4b9d7228417650f4124248d0"
+    txids_concat = "bbf9516f9e14ce192b299505d6e5ba44c2dc1158a0e1790cbfddd3208d40353c" +  \
+        "4a5c1a769ac65e2ec25dc0ef68db339e80b623ed71009df9689fb41201957e07"
     txids_concat_encoded = str.encode(txids_concat)
     sha256_hash = sha256()
     sha256_hash.update(txids_concat_encoded)

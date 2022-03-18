@@ -6,6 +6,7 @@ from hashlib import sha256
 from typing import List, Dict
 from functools import reduce
 from textwrap import wrap
+from datetime import datetime
 
 HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
 VIN_ADDR_PAD = 40
@@ -20,19 +21,17 @@ class Transaction:
                  vin: List[Dict],
                  vout_addr: str,
                  vout_value: int,
-                 vout_script: str,
                  vchange_addr: str,
-                 vchange_value: int,
-                 vchange_script: str) -> None:
+                 vchange_value: int) -> None:
         self.tx_block_hash = tx_block_hash
         self.tx_block_index = tx_block_index
         self.vin = vin
         self.vout_addr = vout_addr
         self.vout_value = vout_value
-        self.vout_script = vout_script
+        self.vout_script = self.calc_tx_script(addr=self.vout_addr)
         self.vchange_addr = vchange_addr
         self.vchange_value = vchange_value
-        self.vchange_script = vchange_script
+        self.vchange_script = self.calc_tx_script(addr=self.vchange_addr)
         self.txid = self.calculate_txid_hash()
 
     def __repr__(self) -> str:
@@ -140,7 +139,8 @@ class Transaction:
 
     def calculate_txid_hash(self):
         vin_str = self.flatten_vin_values_to_str(self.vin)
-        txid_hash_str = str.encode(vin_str + self.vout_addr + self.vout_script + self.vchange_addr + self.vchange_script)
+        # base the hash on the vin + addresses only....
+        txid_hash_str = str.encode(vin_str + self.vout_addr + self.vchange_addr)
 
         sha256_hash = sha256()
         sha256_hash.update(txid_hash_str)
@@ -171,3 +171,14 @@ class Transaction:
         vin_dict['vin_script'] = vin[VIN_ADDR_PAD+VIN_VALUE_PAD: VIN_ADDR_PAD+VIN_VALUE_PAD+VIN_SCRIPT_PAD].lstrip('0')
 
         return vin_dict
+
+    @staticmethod
+    def calc_tx_script(addr: str) -> str:
+        script_input = str.encode(
+            addr + str(datetime.timestamp(datetime.now()))
+        )
+
+        sha256_hash = sha256()
+        sha256_hash.update(script_input)
+
+        return sha256_hash.hexdigest()
