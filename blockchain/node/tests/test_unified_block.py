@@ -12,6 +12,7 @@ from node.bl.unified_block import UnifiedBlock
 @pytest.fixture
 def unified_block() -> UnifiedBlock:
     vin_tx1 = [{
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "coinbase",
         "vin_value": 6000,
         "vin_script": "a0a0a0a0a0a0a0a0a0"
@@ -26,18 +27,18 @@ def unified_block() -> UnifiedBlock:
                         vchange_value=0)
     
     vin_tx2 = [{
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 627907074,
         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf031266666"
+            "3040e9c680bf054881e548606ee77022100a1d6a24adf36015bfb7721ab4352efab4349456683ab4710"
     },
     {
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 120000000,
         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf03555"
+            "3040e9c680bf054881e548606ee77022100a1d6a24adf36015bfb7721ab4352efab4349456683ab4710"
     }]
 
     tx_2 = Transaction(tx_block_hash="00000000000009dff396a335faf0c7a834b5543bd63267bb4d7ecf53fb36377e",
@@ -61,8 +62,8 @@ def unified_block() -> UnifiedBlock:
     return unified_b
 
 def test_calc_block_merkle_root(unified_block):
-    txids_concat = "bbf9516f9e14ce192b299505d6e5ba44c2dc1158a0e1790cbfddd3208d40353c" +  \
-        "4a5c1a769ac65e2ec25dc0ef68db339e80b623ed71009df9689fb41201957e07"
+    txids_concat = "66b59b129bca8162813b8933fe5b29dc2d6631a67c64dcbc37291815806095a1" +  \
+        "79424b88393c8ae9d773d7cf96a1bd17f225b2feba00cb8d7de29b06d0f79893"
     txids_concat_encoded = str.encode(txids_concat)
     sha256_hash = sha256()
     sha256_hash.update(txids_concat_encoded)

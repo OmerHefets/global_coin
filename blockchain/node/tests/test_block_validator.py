@@ -16,6 +16,7 @@ def bv() -> BlockValidator:
 @pytest.fixture
 def unified_block() -> UnifiedBlock:
     vin_tx1 = [{
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "coinbase",
         "vin_value": 6000,
         "vin_script": "a0a0a0a0a0a0a0a0a0"
@@ -30,18 +31,18 @@ def unified_block() -> UnifiedBlock:
                         vchange_value=0)
     
     vin_tx2 = [{
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 627907074,
         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf031266666"
+            "3040e9c680bf054881e548606ee77022100a1d6a24adf36015bfb7721ab4352efab4349456683ab4710"
     },
     {
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 120000000,
         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf03555"
+            "3040e9c680bf054881e548606ee77022100a1d6a24adf36015bfb7721ab4352efab4349456683ab4710"
     }]
 
     tx_2 = Transaction(tx_block_hash="00000000000000027e7ba6fe7bad39faf3b5a83daed765f05f7d1b71a1632249",
@@ -67,6 +68,7 @@ def unified_block() -> UnifiedBlock:
 @pytest.fixture
 def wrong_unified_block() -> UnifiedBlock:
     vin_tx1 = [{
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 6000,
         "vin_script": "a0a0a0a0a0a0a0a0a0"
@@ -81,18 +83,18 @@ def wrong_unified_block() -> UnifiedBlock:
                         vchange_value=0)
     
     vin_tx2 = [{
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 627907074,
         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf031266666"
+            "3040e9c680bf054881e548606ee77022100a1d6a24adf36015bfb7721ab4352efab4349456683ab4710"
     },
     {
+        "txid": "9a2041052acbcba2875ab048d28ca372a964266cca046d7f2f00655969036e6b",
         "vin_addr": "1VayNert3x1KzbpzMGt2qdqrAThiRov55",
         "vin_value": 120000000,
         "vin_script": "3046022100cf19e206eb882624d9631a443eaf4925894" + \
-            "3040e9c680bf054881e548606ee77022100a1d624adf36015bfb772171046b" + \
-            "1aa2edbed7c1fd20ec8c57fabaaebf03555"
+            "3040e9c680bf054881e548606ee77022100a1d6a24adf36015bfb7721ab4352efab4349456683ab4710"
     }]
 
     tx_2 = Transaction(tx_block_hash="00000000000009dff396a335faf0c7a834b5543bd63267bb4d7ecf53fb36377e",

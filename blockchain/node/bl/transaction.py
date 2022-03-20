@@ -9,10 +9,11 @@ from textwrap import wrap
 from datetime import datetime
 
 HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
+VIN_TXID_PAD = 64
 VIN_ADDR_PAD = 40
 VIN_VALUE_PAD = 30
-VIN_SCRIPT_PAD = 180
-VIN_LENGTH = 250 # total vin pad is 250 (addr + value + script)
+VIN_SCRIPT_PAD = 128
+VIN_LENGTH = 262 # total vin pad is 262 (addr + value + script + txid)
 
 class Transaction:
     def __init__(self,
@@ -128,7 +129,8 @@ class Transaction:
 
     @staticmethod
     def flatten_vin_dict(vin_dict: Dict) -> str:
-        return (vin_dict['vin_addr'] + str(vin_dict['vin_value']) + vin_dict['vin_script'])
+        return (vin_dict['txid'] + vin_dict['vin_addr'] + \
+        str(vin_dict['vin_value']) + vin_dict['vin_script'])
 
     @staticmethod
     def flatten_vin_values_to_str(vin_list: List[Dict]) -> str:
@@ -157,8 +159,8 @@ class Transaction:
 
     @staticmethod
     def encode_pad_vin_to_str(vin: Dict) -> str:
-        encoded_vin = vin['vin_addr'].rjust(VIN_ADDR_PAD, '0') + str(vin['vin_value']).rjust(VIN_VALUE_PAD, '0') \
-            + vin['vin_script'].rjust(VIN_SCRIPT_PAD, '0')
+        encoded_vin = vin['txid'].rjust(VIN_TXID_PAD, '0') + vin['vin_addr'].rjust(VIN_ADDR_PAD, '0') + \
+        str(vin['vin_value']).rjust(VIN_VALUE_PAD, '0') + vin['vin_script'].rjust(VIN_SCRIPT_PAD, '0')
             
         return encoded_vin
 
@@ -166,9 +168,10 @@ class Transaction:
     def decode_pad_vin_to_dict(vin: str) -> Dict:
         vin_dict = {}
 
-        vin_dict['vin_addr'] = vin[0: VIN_ADDR_PAD].lstrip('0')
-        vin_dict['vin_value'] = int(vin[VIN_ADDR_PAD: VIN_ADDR_PAD+VIN_VALUE_PAD].lstrip('0'))
-        vin_dict['vin_script'] = vin[VIN_ADDR_PAD+VIN_VALUE_PAD: VIN_ADDR_PAD+VIN_VALUE_PAD+VIN_SCRIPT_PAD].lstrip('0')
+        vin_dict['txid'] = vin[0: VIN_TXID_PAD]
+        vin_dict['vin_addr'] = vin[VIN_TXID_PAD: VIN_TXID_PAD+VIN_ADDR_PAD].lstrip('0')
+        vin_dict['vin_value'] = int(vin[VIN_TXID_PAD+VIN_ADDR_PAD: VIN_TXID_PAD+VIN_ADDR_PAD+VIN_VALUE_PAD].lstrip('0'))
+        vin_dict['vin_script'] = vin[VIN_TXID_PAD+VIN_ADDR_PAD+VIN_VALUE_PAD: VIN_TXID_PAD+VIN_ADDR_PAD+VIN_VALUE_PAD+VIN_SCRIPT_PAD].lstrip('0')
 
         return vin_dict
 
