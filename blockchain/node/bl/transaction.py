@@ -8,7 +8,7 @@ from functools import reduce
 from textwrap import wrap
 from datetime import datetime
 
-HASH_LENGTH = 64  # hash is 32 bytes from SHA-256 hash function
+HASH_LENGTH = 64 # hash is 32 bytes from SHA-256 hash function
 VIN_TXID_PAD = 64
 VIN_ADDR_PAD = 40
 VIN_VALUE_PAD = 30

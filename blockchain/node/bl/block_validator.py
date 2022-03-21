@@ -106,7 +106,9 @@ class BlockValidator:
 
         return True
 
-
+#!!!
+#TODO: CHANGE TO CHECK ALL ARE IN THE TX-POOL, NOT UTXO. THEY WILL NOT BE UTXO'S
+#!!!
     @staticmethod
     def __validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
         utxo_data_manager = UtxoDataManager()

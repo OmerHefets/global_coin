@@ -6,3 +6,6 @@ class TransactionException(Exception):
 
 class BlockValidationException(Exception):
     pass
+
+class TransactionValidationException(Exception):
+    pass
