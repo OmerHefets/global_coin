@@ -1,10 +1,12 @@
 import sys
 import os
-from typing import Dict
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
+from typing import Dict
+from functools import reduce
 from blockchain.node.bl.transaction import Transaction
 from node.bl.exceptions import TransactionValidationException
+from dal.blockchain_tx_db.tx_data_manager_sql import TransactionDataManager
 
 
 class TxValidator:
@@ -30,24 +32,34 @@ class TxValidator:
         pass
 
     def __validate_vin_input(vin_dict: Dict) -> bool:
+        vin_txid = vin_dict['txid']
+
+        tx_data_manager = TransactionDataManager()
+        tx_data_manager.get_tx_by_txid(vin_txid)
+
+        
         # get tx by the txid of the vin (from tx db)
         # find address and save its output script as the message
         # validate vin script as the valid signature of the message
         pass
 
     def __validate_tx_hash(tx: Transaction) -> bool:
-        # expected_hash = tx.calc_hash()
-        # validate expected_hash == tx.hash
-        pass
+        expected_hash = tx.calculate_txid_hash()
+
+        if tx.txid != expected_hash:
+            raise TransactionValidationException("TX hash is not valid.")
+
+        return True
 
     def __validate_input_val_equals_output(tx: Transaction) -> bool:
-        # check if sum_inputs == sum_outputs - return true if valid, or 
-        # TransactionValidationException otherwise
-        pass
+        if TxValidator.__calc_tx_sum_of_inputs(tx) != TxValidator.__calc_tx_sum_of_outputs(tx):
+            raise TransactionValidationException("Inputs and outputs does not sum to the same value.")
 
+        return True
+
+    @staticmethod
     def __calc_tx_sum_of_inputs(tx: Transaction) -> int:
-        # for each input in tx.vin, sum all input_value field
-        pass
+        return reduce(lambda x, y: x+y, map(lambda vin: vin['vin_value'], tx.vin), 0)
 
     @staticmethod
     def __calc_tx_sum_of_outputs(tx: Transaction) -> int:

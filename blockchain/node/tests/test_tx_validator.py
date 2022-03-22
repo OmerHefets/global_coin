@@ -66,3 +66,13 @@ def valid_adv_tx() -> Transaction:
 def test_calc_tx_sum_of_outputs(tx_validator, tx, request):
     tx = request.getfixturevalue(tx)
     assert tx.vout_value + tx.vchange_value == tx_validator._TxValidator__calc_tx_sum_of_outputs(tx)
+
+
+@pytest.mark.parametrize(
+    argnames=["tx","input_val"],
+    argvalues=[("valid_tx", 6000),
+               ("valid_adv_tx", 747907074)]
+)
+def test_calc_tx_sum_of_inputs(tx_validator, tx, input_val, request):
+    tx = request.getfixturevalue(tx)
+    assert tx_validator._TxValidator__calc_tx_sum_of_inputs(tx) == input_val
