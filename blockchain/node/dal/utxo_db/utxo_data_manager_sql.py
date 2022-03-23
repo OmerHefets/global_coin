@@ -27,7 +27,22 @@ class UtxoDataManager(NodeUtxoInterface):
         else:
             raise UtxoDatabaseException(f"No such utxo exists with txid {txid}") 
 
-    
+
+    def get_utxo_by_txid_and_addr(self, txid: str, addr: str) -> Dict:
+        self.db_connection.cursor.execute(
+            """ SELECT txid, vout_addr, vchange_addr FROM node_utxo
+            WHERE txid=%s AND (vout_addr=%s OR vchange_addr=%s)""",
+            vars=(txid, addr, addr)
+        )
+
+        utxo = self.db_connection.cursor.fetchone()
+
+        if utxo != None:
+            return dict(utxo)
+        else:
+            raise UtxoDatabaseException(f"No such utxo exists with txid {txid} and addr {addr}")
+
+
     def get_utxos_by_addr(self, addr: str) -> List[Dict]:
         self.db_connection.cursor.execute(
             """ SELECT txid, vout_addr, vchange_addr FROM node_utxo
