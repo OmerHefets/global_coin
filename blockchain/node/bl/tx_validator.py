@@ -15,7 +15,7 @@ from ecdsa import VerifyingKey
 
 
 class TxValidator:
-    # TODO: Changes in the UTXO db and maybe in VIN as well
+    
     def validate_tx(tx: Transaction, pub_key: VerifyingKey) -> bool:
         """
         validate all vin tx's are UTXO
