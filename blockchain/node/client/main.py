@@ -1,8 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 from fastapi import FastAPI, HTTPException
-from client.routers import blockchain_data_getters, validators
+from routers import blockchain_data_getters, validators
 
+bazooka_app = FastAPI()
 
-app = FastAPI()
-
-app.include_router(router=blockchain_data_getters.router)
-app.include_router(router=validators.router)
+bazooka_app.include_router(router=blockchain_data_getters.router)
+bazooka_app.include_router(router=validators.router)

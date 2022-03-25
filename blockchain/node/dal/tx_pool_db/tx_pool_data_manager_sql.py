@@ -7,7 +7,7 @@ from typing import Dict, List
 from dal.tx_pool_db.tx_pool_data_manager_interface import NodeTxPoolInterface
 from bl.transaction import Transaction
 from dal.sql_database_connection import database_connection
-from node.dal.utils.exceptions import TxPoolDatabaseException
+from dal.utils.exceptions import TxPoolDatabaseException
 
 class TxPoolDataManager(NodeTxPoolInterface):
 
