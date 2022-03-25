@@ -1,5 +1,11 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 from typing import Optional
 from pydantic import BaseModel
+from node.bl.transaction import Transaction
+from typing import List
 
 class BlockModel(BaseModel):
     hash: str

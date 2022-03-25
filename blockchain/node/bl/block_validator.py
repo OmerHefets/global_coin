@@ -106,15 +106,14 @@ class BlockValidator:
 
         return True
 
-#!!!
-#TODO: CHANGE TO CHECK ALL ARE IN THE TX-POOL, NOT UTXO. THEY WILL NOT BE UTXO'S
-#!!!
+
     @staticmethod
     def __validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
         utxo_data_manager = UtxoDataManager()
 
         tx_list_without_coinbase_tx = list(filter(lambda tx: tx.tx_block_index != 1, unified_b.tx_list))
 
+        ### NEED TO CHECK BOTH IN VOUT_ADDR AND VCHANGE_ADDR SEPERATELY ###
         for tx in tx_list_without_coinbase_tx: # Check all tx's but coinbase
             try:
                 utxo_data_manager.get_utxo_by_txid(tx.txid) # TODO: Not goot enought. Might be exploited.
