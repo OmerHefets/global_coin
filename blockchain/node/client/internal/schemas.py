@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 from typing import Optional
 from pydantic import BaseModel
 from node.bl.transaction import Transaction
-from typing import List
+from typing import List, Dict
 
 class BlockModel(BaseModel):
     hash: str
@@ -15,6 +15,18 @@ class BlockModel(BaseModel):
     height: int
     difficulty: float
     timestamp: float
+
+
+class UnifiedBlockModel(BaseModel):
+    hash: str
+    prev_block_hash: str
+    merkle_root: str
+    nonce: int
+    height: int
+    difficulty: float
+    timestamp: float
+    tx_list: List
+
 
 class TxModel(BaseModel):
     txid: str

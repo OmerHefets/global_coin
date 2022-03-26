@@ -17,7 +17,7 @@ DIFFICULTY_BITS = 256 # as of the hash size (sha-256)
 
 class BlockValidator:
 
-    def validate_block(unified_block: UnifiedBlock, req_difficulty: float) -> bool:
+    def validate_block(self, unified_block: UnifiedBlock, req_difficulty: float) -> bool:
         """
         validate hash (smaller than difficulty defined by the node, contain all items)
         validate first tx (coinbase)
@@ -39,6 +39,9 @@ class BlockValidator:
         if len(tx_list) == 0 or tx_list is None:
             raise BlockValidationException("No tx's exist in the block. At least coinbase tx should exist")
         
+        if len(tx_list) == 1 and tx_list[0].tx_block_index != 1:
+            raise BlockValidationException("The only tx exists is not a coinbase transaction")
+
         first_tx = list(filter(lambda tx: tx.tx_block_index == 1, tx_list))[0]
         if len(first_tx.vin) != 1:
             raise BlockValidationException("First tx doesn't have specifically 1 vin")
