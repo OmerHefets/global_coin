@@ -3,6 +3,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from typing import Dict, List
+from node.dal.utils.exceptions import TxPoolDatabaseException
+from node.dal.tx_pool_db.tx_pool_data_manager_sql import TxPoolDataManager
 from node.bl.transaction import Transaction
 from node.bl.unified_block import UnifiedBlock
 from node.bl.exceptions import BlockValidationException
@@ -30,7 +32,7 @@ class BlockValidator:
         return BlockValidator.__validate_first_tx(tx_list=unified_block.tx_list) and BlockValidator.__validate_txs_related_to_block(unified_b=unified_block) \
             and BlockValidator.__validate_merkle_root(unified_b=unified_block) and BlockValidator.__validate_block_timestamp(unified_b=unified_block) \
             and BlockValidator.__validate_prev_block_hash(unified_b=unified_block) and BlockValidator.__validate_block_height(unified_b=unified_block) \
-            and BlockValidator.__validate_all_txs_are_utxo(unified_b=unified_block) and BlockValidator.__validate_block_difficulty(unified_block, req_difficulty) \
+            and BlockValidator.__validate_all_txs_are_from_pool(unified_b=unified_block) and BlockValidator.__validate_block_difficulty(unified_block, req_difficulty) \
             and BlockValidator.__validate_block_hash(unified_b=unified_block, req_difficulty=req_difficulty)
 
 
@@ -99,7 +101,7 @@ class BlockValidator:
     def __validate_block_height(unified_b: UnifiedBlock) -> bool:
         bc_data_manager = BlockchainDataManager()
         try:
-            latest_block: Dict = bc_data_manager.get_latest_block
+            latest_block: Dict = bc_data_manager.get_latest_block()
         except BlockchainDatabaseException:
             raise BlockValidationException("Could not verify the height since no more blocks exists in the blockchain")
         
@@ -111,16 +113,16 @@ class BlockValidator:
 
 
     @staticmethod
-    def __validate_all_txs_are_utxo(unified_b: UnifiedBlock) -> bool:
+    def __validate_all_txs_are_from_pool(unified_b: UnifiedBlock) -> bool:
+        tx_pool_data_manager = TxPoolDataManager()
         utxo_data_manager = UtxoDataManager()
 
         tx_list_without_coinbase_tx = list(filter(lambda tx: tx.tx_block_index != 1, unified_b.tx_list))
 
-        ### NEED TO CHECK BOTH IN VOUT_ADDR AND VCHANGE_ADDR SEPERATELY ###
         for tx in tx_list_without_coinbase_tx: # Check all tx's but coinbase
             try:
-                utxo_data_manager.get_utxo_by_txid(tx.txid) # TODO: Not goot enought. Might be exploited.
-            except Exception:
+                tx_pool_data_manager.get_tx_by_txid(txid=tx.txid)
+            except TxPoolDatabaseException:
                 raise BlockValidationException("Some txs in the block are not UTXO's.")
 
         return True
@@ -154,5 +156,5 @@ class BlockValidator:
 
     @staticmethod
     def __validate_block_hash_val_by_difficulty(unified_b: UnifiedBlock, req_difficulty: float) -> bool:
-        return False if int(unified_b.hash, 16) > 2 ** (DIFFICULTY_BITS - req_difficulty) else True
+        return False if int(unified_b.hash, 16) > (2 ** (DIFFICULTY_BITS - req_difficulty)) else True
 

@@ -59,23 +59,23 @@ class UtxoDataManager(NodeUtxoInterface):
             raise UtxoDatabaseException(f"No utxo's exists for address {addr}")
         
 
-    def add_new_utxo(self, utxo: Transaction) -> None:
+    def add_new_utxo(self, txid: str, vout_addr: str, vchange_addr: str) -> None:
         self.db_connection.cursor.execute(
             """INSERT INTO node_utxo (txid, vout_addr, vchange_addr)
             VALUES (%s, %s, %s)""",
-            vars=(utxo.txid, utxo.vout_addr, utxo.vchange_addr)
+            vars=(txid, vout_addr, vchange_addr)
         )
 
         self.db_connection.conn.commit()
 
 
-    def update_utxo_by_txid(self, txid: str, utxo: Transaction) -> None:
+    def update_utxo_by_txid(self, txid: str, new_txid: str, vout_addr: str, vchange_addr: str) -> None:
         self.db_connection.cursor.execute(
             """ UPDATE node_utxo SET
             txid=%s, vout_addr=%s, vchange_addr=%s
             
             WHERE txid=%s""",
-            vars=(utxo.txid, utxo.vout_addr, utxo.vchange_addr, txid)
+            vars=(new_txid, vout_addr, vchange_addr, txid)
         )
 
         self.db_connection.conn.commit()
@@ -89,3 +89,12 @@ class UtxoDataManager(NodeUtxoInterface):
 
         self.db_connection.conn.commit()
 
+
+    def delete_utxo_by_txid_and_addr(self, txid: str, addr: str) -> None:
+        self.db_connection.cursor.execute(
+            """ DELETE FROM node_utxo
+            WHERE txid=%s AND (vout_addr=%s OR vchange_addr=%s)""",
+            vars=(txid, addr, addr)
+        )
+
+        self.db_connection.conn.commit()
