@@ -26,6 +26,17 @@ class UnifiedBlock(Block):
         self.merkle_root = self.calc_block_merkle_root(self)
 
 
+    def __repr__(self) -> str:
+        return f"""UnifiedBlock(hash='{self.hash}',
+        prev_block_hash='{self.prev_block_hash}',
+        merkle_root='{self.merkle_root}',
+        timestamp={self.timestamp},
+        difficulty={self.difficulty},
+        nonce={self.nonce},
+        height={self.height},
+        tx_list={self.tx_list}"""
+
+
     @property
     def tx_list(self) -> List[Transaction]:
         return self._tx_list

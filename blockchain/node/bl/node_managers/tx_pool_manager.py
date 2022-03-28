@@ -26,4 +26,4 @@ class TxPoolManager:
             tx_list_of_dicts = self.tx_pool_db.get_top_100_txs()
             return (status.HTTP_200_OK, tx_list_of_dicts)
         except TxPoolDatabaseException:
-            return (status.HTTP_200_OK, None) # An empty list is fine, no 404 is required
+            return (status.HTTP_200_OK, []) # An empty list is fine, no 404 is required

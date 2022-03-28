@@ -9,3 +9,4 @@ bazooka_app = FastAPI()
 
 bazooka_app.include_router(router=blockchain_data_getters.router)
 bazooka_app.include_router(router=chain_consensus.router)
+
