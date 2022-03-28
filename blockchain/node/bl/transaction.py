@@ -159,6 +159,19 @@ class Transaction:
 
 
     @staticmethod
+    def convert_tx_to_dict(tx) -> Dict:
+        return {
+            'tx_block_hash': tx.tx_block_hash,
+            'tx_block_index': tx.tx_block_index,
+            'vin': tx.vin,
+            'vout_addr': tx.vout_addr,
+            'vout_value': tx.vout_value,
+            'vchange_addr': tx.vchange_addr,
+            'vchange_value': tx.vchange_value
+        }
+
+
+    @staticmethod
     def flatten_vin_dict(vin_dict: Dict) -> str:
         return (vin_dict['txid'] + vin_dict['vin_addr'] + \
         str(vin_dict['vin_value']) + vin_dict['vin_script'])

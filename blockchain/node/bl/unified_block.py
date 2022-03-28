@@ -64,6 +64,20 @@ class UnifiedBlock(Block):
 
 
     @staticmethod
+    def convert_unified_block_to_dict(unified_block) -> Dict:
+        return {
+            'hash': unified_block.hash,
+            'prev_block_hash': unified_block.prev_block_hash,
+            'merkle_root': unified_block.merkle_root,
+            'timestamp': unified_block.timestamp,
+            'difficulty': unified_block.difficulty,
+            'nonce': unified_block.nonce,
+            'height': unified_block.height,
+            'tx_list': [Transaction.convert_tx_to_dict(tx) for tx in unified_block.tx_list]
+        }
+
+
+    @staticmethod
     def calc_block_merkle_root(block):
         tx_list_ordered = sorted(block.tx_list, key=lambda tx: tx.tx_block_index, reverse=False)
 

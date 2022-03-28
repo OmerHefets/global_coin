@@ -1,7 +1,8 @@
 import sys
 sys.path.append("")
 
-import copy
+from string import ascii_lowercase
+import random
 from requests import get
 from typing import Dict, List
 from blockchain.node.bl.unified_block import UnifiedBlock
@@ -10,6 +11,7 @@ from datetime import datetime
 
 LATEST_BLOCK_ROUTE = "/blockchain/latest"
 TOP_100_TXS = "/tx_pool/top_100"
+RAND_SCRIPT_LEN = 30
 
 class BlockAssembler:
 
@@ -21,7 +23,7 @@ class BlockAssembler:
 
     def get_prev_block_info(self):
         latest_block: Dict = get(url=(self.node_url+LATEST_BLOCK_ROUTE)).json()
-        return (latest_block['prev_block_hash'], latest_block['height'])
+        return (latest_block['hash'], latest_block['height'])
 
     
     def create_tx_list(self) -> List:
@@ -41,7 +43,7 @@ class BlockAssembler:
                                'txid': "0",
                                'vin_addr': "coinbase",
                                'vin_value': 50,
-                               'vin_script': "free-of-charge-script-chars"
+                               'vin_script': ''.join(random.choice(ascii_lowercase) for i in range(RAND_SCRIPT_LEN))
                            }],
                            vout_addr=self.miner_addr,
                            vout_value=50,
