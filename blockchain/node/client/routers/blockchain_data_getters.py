@@ -84,4 +84,3 @@ def get_top_100_txs_in_pool():
     _, tx = bazooka_cli.tx_pool_manager.get_top_100_txs() 
 
     return tx
-

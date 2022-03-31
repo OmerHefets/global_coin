@@ -10,7 +10,7 @@ from node.bl.unified_block import UnifiedBlock
 from node.bl.exceptions import BlockValidationException
 from client.routers.blockchain_data_getters import bazooka_cli
 
-DIFFICULTY = 13
+DIFFICULTY = 21
 router = APIRouter()
 
 @router.post("/insert/block", status_code=status.HTTP_201_CREATED)
