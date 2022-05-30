@@ -1,9 +1,11 @@
 import sys
-sys.path.append("")
+import os
 
-from blockchain.miner.mining.block_assembler import BlockAssembler
-from blockchain.miner.mining.mining_alg import Miner
-from blockchain.node.bl.unified_block import UnifiedBlock
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+from miner.mining.block_assembler import BlockAssembler
+from miner.mining.mining_alg import Miner
+from node.bl.unified_block import UnifiedBlock
 import json
 import yaml
 import requests
@@ -14,7 +16,7 @@ DIFF_ROUTE = '/node/difficulty'
 BLOCK_INSERTION_ROUTE = '/insert/block/'
 
 def config_miner():
-    with open(r'blockchain/miner/client/config.yaml') as file:
+    with open(r'config.yaml') as file:
         document = yaml.full_load(file)
 
     miner_addr = document['miner_addr']
