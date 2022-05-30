@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from typing import Dict
 from functools import reduce
-from blockchain.node.bl.transaction import Transaction
+from node.bl.transaction import Transaction
 from node.bl.exceptions import TransactionValidationException
 from node.dal.utils.exceptions import UtxoDatabaseException
 from dal.blockchain_tx_db.tx_data_manager_sql import TransactionDataManager
@@ -16,7 +16,7 @@ from ecdsa import VerifyingKey
 
 class TxValidator:
     
-    def validate_tx(tx: Transaction, pub_key: VerifyingKey) -> bool:
+    def validate_tx(self, tx: Transaction, pub_key: VerifyingKey) -> bool:
         """
         validate all vin tx's are UTXO
         validate the unlocking script is valid for each vin
@@ -27,11 +27,13 @@ class TxValidator:
             and TxValidator.__validate_tx_hash(tx) and TxValidator.__validate_input_val_equals_output(tx)
 
 
+    @staticmethod
     def __validate_vin_is_utxo(tx: Transaction) -> bool:
         vins_utxo_validations = [TxValidator.__validate_input_is_utxo(vin_dict) for vin_dict in tx.vin]
         return False if False in vins_utxo_validations else True
 
 
+    @staticmethod
     def __validate_input_is_utxo(vin_dict: Dict) -> bool:
         vin_addr = vin_dict['vin_addr']
         vin_txid = vin_dict['txid']
@@ -45,12 +47,14 @@ class TxValidator:
             return False
 
 
+    @staticmethod
     def __validate_scripts_in_vin(tx: Transaction, pub_key: VerifyingKey) -> bool:
         # for each vin do "validate_vin_input"
         vins_validations = [TxValidator.__validate_vin_input(vin_dict, pub_key) for vin_dict in tx.vin]
         return False if False in vins_validations else True
 
 
+    @staticmethod
     def __validate_vin_input(vin_dict: Dict, pub_key: VerifyingKey) -> bool:
         # get tx by the txid of the vin (from tx db)
         # find address and save its output script as the message

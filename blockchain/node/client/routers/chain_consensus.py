@@ -1,11 +1,14 @@
 import sys
 import os
+
+from node.bl.transaction import Transaction
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 from typing import Dict
 from fastapi import APIRouter, status, HTTPException, Response
 from node.client.internal.schemas import BlockModel, TxPoolModel, UnifiedBlockModel
 from node.bl.block_validator import BlockValidator
+from node.bl.tx_validator import TxValidator
 from node.bl.unified_block import UnifiedBlock
 from node.bl.exceptions import BlockValidationException
 from client.routers.blockchain_data_getters import bazooka_cli
@@ -38,5 +41,11 @@ def insert_new_block(block: UnifiedBlockModel, response: Response):
 
 
 @router.post("/insert/transaction", status_code=status.HTTP_201_CREATED)
-def insert_new_transaction():
-    pass
+def insert_new_transaction(tx: TxPoolModel, response: Response):
+    tv = TxValidator()
+    tx = Transaction.init_tx_from_dict(tx_dict=dict(tx))
+    try:
+        if tv.validate_tx():
+            pass
+    except:
+        pass

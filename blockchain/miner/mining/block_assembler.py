@@ -5,8 +5,8 @@ from string import ascii_lowercase
 import random
 from requests import get
 from typing import Dict, List
-from blockchain.node.bl.unified_block import UnifiedBlock
-from blockchain.node.bl.transaction import Transaction
+from node.bl.unified_block import UnifiedBlock
+from node.bl.transaction import Transaction
 from datetime import datetime
 
 LATEST_BLOCK_ROUTE = "/blockchain/latest"
@@ -30,9 +30,9 @@ class BlockAssembler:
         return [self.__create_coinbase_tx()] + self.__get_tx_list_from_tx_pool()
 
 
-    #TODO: !!! MUST BE EDITED WHEN WALLETS WILL BE PROGRAMMED. NO DICT -> TX TRANSFORM SHOULD RETURN List[Transaction]
     def __get_tx_list_from_tx_pool(self) -> List[Transaction]:
-        top_100_txs_from_pool = get(url=(self.node_url+TOP_100_TXS)).json()
+        top_100_txs_from_pool: List[Dict] = get(url=(self.node_url+TOP_100_TXS)).json()
+        top_100_txs_from_pool: List[Transaction] = [Transaction.init_tx_from_dict(tx_dict) for tx_dict in top_100_txs_from_pool]
         return top_100_txs_from_pool 
 
 

@@ -1,8 +1,8 @@
 import sys
 sys.path.append("")
 
-from blockchain.node.bl.unified_block import UnifiedBlock
-from blockchain.node.bl.block_validator import DIFFICULTY_BITS
+from node.bl.unified_block import UnifiedBlock
+from node.bl.block_validator import DIFFICULTY_BITS
 
 
 class Miner:

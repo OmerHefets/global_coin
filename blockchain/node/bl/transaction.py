@@ -148,6 +148,7 @@ class Transaction:
         self._vchange_script = new_vchange_script
 
 
+    @staticmethod
     def init_tx_from_dict(tx_dict: Dict):
         return Transaction(tx_block_hash=tx_dict['tx_block_hash'],
                          tx_block_index=tx_dict['tx_block_index'],
